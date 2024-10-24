@@ -20,8 +20,8 @@ import use_case.signup.SignupUserDataAccessInterface;
  * DAO for user data implemented using a File to persist the data.
  */
 public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
-                                                 LoginUserDataAccessInterface,
-                                                 ChangePasswordUserDataAccessInterface {
+        LoginUserDataAccessInterface,
+        ChangePasswordUserDataAccessInterface {
 
     private static final String HEADER = "username,password";
 
@@ -90,6 +90,15 @@ public class FileUserDataAccessObject implements SignupUserDataAccessInterface,
     @Override
     public User get(String username) {
         return accounts.get(username);
+    }
+
+    @Override
+    public void setCurrentUser(String name) {
+    }
+
+    @Override
+    public String getCurrentUser() {
+        return null;
     }
 
     @Override
