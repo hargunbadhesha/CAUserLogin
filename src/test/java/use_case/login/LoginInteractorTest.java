@@ -12,8 +12,7 @@ import static org.junit.Assert.*;
 
 public class LoginInteractorTest {
 
-    // TODO Task 2.2: make a copy of this test method and follow the instructions in the readme to test your
-    //                code from Task 2.1..
+
     @Test
     public void successTest() {
         LoginInputData inputData = new LoginInputData("Paul", "password");
@@ -39,6 +38,39 @@ public class LoginInteractorTest {
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
         interactor.execute(inputData);
+    }
+
+    @Test
+    public void successUserLoggedInTest() {
+        final LoginInputData inputData = new LoginInputData("Paul", "password");
+        final LoginUserDataAccessInterface userRepository = new InMemoryUserDataAccessObject();
+
+        // Add Paul to the data access repository before logging in.
+        final UserFactory factory = new CommonUserFactory();
+        final User user = factory.create("Paul", "password");
+        userRepository.save(user);
+
+        // Check that no one is logged in initially
+        assertNull(userRepository.getCurrentUser());
+
+        // Create a successPresenter that tests whether the current user is "Paul"
+        final LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
+            @Override
+            public void prepareSuccessView(LoginOutputData user) {
+                assertEquals("Paul", user.getUsername());
+            }
+
+            @Override
+            public void prepareFailView(String error) {
+                fail("Use case failure is unexpected.");
+            }
+        };
+
+        final LoginInputBoundary interactor = new LoginInteractor(userRepository, successPresenter);
+        interactor.execute(inputData);
+
+        // Check that Paul is logged in after the login use case
+        assertEquals("Paul", userRepository.getCurrentUser());
     }
 
 
